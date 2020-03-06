@@ -1,0 +1,67 @@
+#+TITLE: mgrs
+
+This is a Common Lisp library to convert coordinates between Latitude/Longitude
+and MGRS.
+
+* API
+
+In the library, latitude and longitude are represented by real numbers
+(degrees), positive for northern latitude and eastern longitudes, and negative
+for southern latitude and western longitudes.
+
+
+#+BEGIN_SRC lisp
+(lat/lon->mgrs latitude longitude &optional precision) -> string
+#+END_SRC
+
+Return the MGRS locator for the given /latitude/ and /longitude/. The
+/precision/ (in meters) of the locator can be 1, 10, 100, 1000, 10000.
+
+
+#+BEGIN_SRC lisp
+(mgrs->lat/lon locator) -> list
+#+END_SRC
+
+Return the latitude and longitude for the southwest corner of the given
+MGRS /locator/ square.
+
+* Examples
+
+Load the library:
+
+#+BEGIN_SRC lisp
+> (asdf:load-system "mgrs")
+...
+#+END_SRC
+
+
+Get the MGRS locator of Munich:
+
+#+BEGIN_SRC lisp
+> (mgrs:lat/lon->mgrs 48.146660d0 11.60833d0)
+"32UPU9401035891"
+#+END_SRC
+
+
+Same thing with a lower precision (100 meters):
+
+#+BEGIN_SRC lisp
+> (mgrs:lat/lon->mgrs 48.146660d0 11.60833d0 100)
+"32UPU940358"
+#+END_SRC
+
+
+Get back the latitude and longitude of Munich:
+
+#+BEGIN_SRC lisp
+> (mgrs:mgrs->lat/lon "32UPU9401035891")
+(48.146655723267834d0 11.60832570541976d0)
+#+END_SRC
+
+* Tests
+
+The tests require the /fiveam/ library.
+
+#+BEGIN_SRC lisp
+(asdf:test-system "mgrs")
+#+END_SRC
