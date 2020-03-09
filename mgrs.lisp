@@ -68,16 +68,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (defun utm->mgrs (zone band easting northing precision)
   "Return the MGRS locator for the given UTM coordinates."
+  (declare (optimize (debug 3)))
   (check-type zone (or (integer -60 -1) (integer 1 60)))
   (check-type band character)
   (check-type easting (real 0 1000000))
   (check-type northing (real 0 10000000))
   (check-type precision (integer 1 10000))
   (let* ((zone (abs zone))
-         (row (floor (mod northing 2000000) 100000))
+         (northing-offset (if (oddp zone) 0 500000))
+         (row (floor (mod (+ northing northing-offset) 2000000) 100000))
          (column (1- (floor easting 100000)))
          (square-x (letter (+ (* 8 (mod (1- zone) 3)) column)))
-         (square-y (letter (if (oddp zone) row (+ row 5))))
+         (square-y (letter row))
          (p (case precision
               ((1) 5)
               ((10) 4)
