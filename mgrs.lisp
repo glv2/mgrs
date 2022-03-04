@@ -1,7 +1,7 @@
 #|
 Convert geographic coordinates between Latitude/Longitude and MGRS.
 
-Copyright 2020 Guillaume Le Vaillant
+Copyright 2020-2022 Guillaume Le Vaillant
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -194,9 +194,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           (t
            (utm->mgrs zone band easting northing precision)))))))
 
-(defun mgrs->lat/lon (locator)
+(defun mgrs->lat/lon (locator &optional center-p)
   "Return the latitude and longitude for the southwest corner of the given
-MGRS LOCATOR square."
+MGRS LOCATOR square, or the center of the square if CENTER-P is not NIL."
   (check-type locator string)
   (let ((size (length locator)))
     (multiple-value-bind (zone band-i) (parse-integer locator :junk-allowed t)
@@ -238,8 +238,12 @@ MGRS LOCATOR square."
                            0)))
         (unless (and square-x square-y easting northing)
           (error "Invalid locator: ~a" locator))
-        (let ((easting (* easting precision))
-              (northing (* northing precision)))
+        (let ((easting (if center-p
+                           (+ (* easting precision) (floor precision 2))
+                           (* easting precision)))
+              (northing (if center-p
+                            (+ (* northing precision) (floor precision 2))
+                            (* northing precision))))
           (case band
             ((#\A #\B)
              (mgrs/ups->lat/lon nil band square-x square-y easting northing))

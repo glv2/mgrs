@@ -19,11 +19,12 @@ Return the MGRS locator for the given /latitude/ and /longitude/. The
 
 
 #+BEGIN_SRC lisp
-(mgrs->lat/lon locator) -> list
+(mgrs->lat/lon locator &optional center-p) -> list
 #+END_SRC
 
 Return the latitude and longitude for the southwest corner of the given
-MGRS /locator/ square.
+MGRS /locator/ square, or the center of the square if /center-p/ is
+not ~nil~.
 
 * Examples
 
