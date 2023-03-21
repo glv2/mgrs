@@ -1,5 +1,7 @@
 #+TITLE: mgrs
 
+The active repository is at https://codeberg.org/glv/mgrs
+
 This is a Common Lisp library to convert coordinates between Latitude/Longitude
 and MGRS.
 
